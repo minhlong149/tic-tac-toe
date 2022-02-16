@@ -1,4 +1,4 @@
-import { Player } from "./gamePlay";
+import { Player } from "./gamePlay.js";
 // const Player = require("./gamePlay");
 
 const buttonX = document.querySelector("#btnX");
