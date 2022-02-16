@@ -1,81 +1,46 @@
-let scoreBoard = {
-  win: 0,
-  lose: 0,
-  ties: 0,
-};
+import { Player } from "./gamePlay";
+// const Player = require("./gamePlay");
 
-class Player {
-  mark: string;
-  score: number;
+const buttonX = document.querySelector("#btnX");
+const buttonO = document.querySelector("#btnO");
+const imageX = buttonX.querySelector("#imgX") as HTMLImageElement;
+const imageO = buttonO.querySelector("#imgO") as HTMLImageElement;
 
-  constructor(mark: string) {
-    this.mark = mark;
-    this.score = 0;
-  }
-}
+const choiceButtons = document.querySelectorAll(".choice__btn");
+choiceButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    if (!button.classList.contains("choice__btn--pick")) {
+      buttonX.classList.toggle("choice__btn--pick");
+      buttonO.classList.toggle("choice__btn--pick");
 
-let user = new Player("x");
-let opponent = new Player("o");
+      imageX.src = buttonX.classList.contains("choice__btn--pick")
+        ? "../../assets/images/icon-x-dark.svg"
+        : "../../assets/images/icon-x-gray.svg";
 
-class TicTacToe {
-  #GameBoard: [
-    [string, string, string],
-    [string, string, string],
-    [string, string, string]
-  ];
-
-  #winner: Player; // player can't play if the game is finished
-
-  constructor() {
-    this.#GameBoard = [
-      ["", "", ""],
-      ["", "", ""],
-      ["", "", ""],
-    ];
-  }
-
-  #checkRow(player: Player, index: number, toColumn: boolean = false) {
-    for (let i = 0; i < 3; ++i) {
-      if (toColumn) {
-        if (this.#GameBoard[index][i] != player.mark) return false;
-      } else {
-        if (this.#GameBoard[i][index] != player.mark) return false;
-      }
+      imageO.src = buttonO.classList.contains("choice__btn--pick")
+        ? "../../assets/images/icon-o-dark.svg"
+        : "../../assets/images/icon-o-gray.svg";
     }
-    return true;
-  }
+  });
+});
 
-  #checkCross(player: Player, reverse: boolean = false) {
-    for (let i = 0; i < 3; ++i) {
-      if (reverse) {
-        if (this.#GameBoard[i][2 - i] != player.mark) return false;
-      } else {
-        if (this.#GameBoard[i][i] != player.mark) return false;
-      }
-    }
-    return true;
-  }
+let user: Player;
+let opponent: Player;
+// let newGame = new TicTacToe();
 
-  #foundWinner(player: Player) {
-    for (let i = 0; i < 3; ++i) {
-      if (this.#checkRow(player, i)) {
-        return true;
-      }
-      if (this.#checkRow(player, i, true)) {
-        return true;
-      }
-    }
-    return this.#checkCross(player) || this.#checkCross(player, true);
+const buttonCPU = document.querySelector("#btnCPU");
+buttonCPU.addEventListener("click", () => {
+  if (buttonX.classList.contains("choice__btn--pick")) {
+    // user pick X
+    user = new Player("x");
+    opponent = new Player("o");
+  } else {
+    // user pink O
+    user = new Player("o");
+    opponent = new Player("x");
   }
-
-  move(player: Player, x: number, y: number) {
-    if (this.#GameBoard[x][y] == "" && !this.#winner) {
-      this.#GameBoard[x][y] = player.mark;
-      if (this.#foundWinner(player)) {
-        this.#winner = player; // winner
-      }
-    }
-  }
-}
-
-let newGame = new TicTacToe();
+  console.log({ user, opponent });
+  const main = document.querySelector("main");
+  main.textContent = "";
+  // Add HTML game board
+});
