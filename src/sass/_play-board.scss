@@ -1,0 +1,65 @@
+@import "./color";
+
+@mixin grig-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 30px 20px;
+}
+
+@mixin round-conner {
+  border-radius: 10px;
+}
+
+.board {
+  @include grig-3();
+
+  margin: 40px 0;
+
+  &__choice {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 120px;
+    height: 120px;
+
+    box-shadow: 0 10px $dark-shadow;
+    background-color: $dark-color;
+    @include round-conner();
+
+    &:active {
+      box-shadow: none;
+      transform: translateY(10px);
+    }
+  }
+}
+
+.score {
+  @include grig-3();
+
+  &__btn {
+    text-align: center;
+    padding: .8em 0;
+    @include round-conner();
+  }
+
+  &__player {
+    font-size: 0.8em;
+  }
+
+  &__scrore {
+    font-size: 1.2em;
+  }
+
+  &--user {
+    background-color: $playerA;
+  }
+
+  &--ties {
+    background-color: $light-color;
+  }
+
+  &--opponent {
+    background-color: $playerB;
+  }
+}
