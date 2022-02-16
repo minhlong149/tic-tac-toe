@@ -47,15 +47,15 @@ const playBoard = `
     <div class="score">
       <div class="score__btn score--user">
         <div class="score__player">You</div>
-        <div class="score__scrore">0</div>
+        <div class="score__score">0</div>
       </div>
       <div class="score__btn score--ties">
         <div class="score__player">Ties</div>
-        <div class="score__scrore">0</div>
+        <div class="score__score">0</div>
       </div>
       <div class="score__btn score--opponent">
         <div class="score__player">CPU</div>
-        <div class="score__scrore">0</div>
+        <div class="score__score">0</div>
       </div>
     </div>
 `;
