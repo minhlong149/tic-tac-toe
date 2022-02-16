@@ -1,13 +1,4 @@
-$playerA: #31c3bd;
-$playerA-shadow: #118c87;
+@import "./reset";
+@import "./global";
 
-$playerB: #f2b137;
-$playerB-shadow: #cc8b13;
-
-$dark-color: #1f3641;
-$dark-shadow: #10212a;
-
-$background: #1a2a33;
-
-$light-color: #a8bfc9;
-$light-shadow: #6b8997;
+@import "./choice-pick"

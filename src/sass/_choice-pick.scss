@@ -1,0 +1,66 @@
+@use "./color";
+
+header {
+  display: flex;
+  justify-content: space-around;
+}
+
+main {
+  .choice {
+    background-color: $dark-color;
+    border-radius: 9px;
+
+    padding: 10px 0;
+    margin: 40px 0;
+
+    .choice__desc {
+      text-align: center;
+      color: $light-color;
+      padding: 1.2em 0;
+    }
+
+    .choice__desc--faded {
+      color: $light-shadow;
+    }
+
+    .choice__pick {
+      padding: 20px;
+      margin: 0 20px;
+      background-color: $dark-shadow;
+      border-radius: 9px;
+
+      .choice__btn {
+        width: 250px;
+      }
+
+      .choice__btn--pick {
+        background-color: $light-color;
+      }
+    }
+  }
+
+  .start {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    .start__btn--orange {
+      background-color: $playerB;
+      box-shadow: 0 9px $playerB-shadow;
+
+      &:active {
+        box-shadow: none;
+        transform: translateY(9px);
+      }
+    }
+    .start__btn--blue {
+      background-color: $playerA;
+      box-shadow: 0 9px $playerA-shadow;
+
+      &:active {
+        box-shadow: none;
+        transform: translateY(9px);
+      }
+    }
+  }
+}

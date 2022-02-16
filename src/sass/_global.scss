@@ -1,0 +1,35 @@
+@import "./color";
+
+@mixin textStyle {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1em;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  height: 100vh;
+  background-color: $background;
+
+  @include textStyle();
+}
+
+button {
+  color: $dark-color;
+  background: none;
+
+  border-radius: 9px;
+  border: none;
+
+  padding: 15px;
+  @include textStyle();
+
+  &:hover {
+    cursor: pointer;
+  }
+}
