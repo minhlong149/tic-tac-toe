@@ -12,11 +12,6 @@ class Player {
     this.mark = mark;
     this.score = 0;
   }
-
-  won() {
-    this.score++;
-    console.log("You won!");
-  }
 }
 
 let user = new Player("x");
@@ -29,7 +24,7 @@ class TicTacToe {
     [string, string, string]
   ];
 
-  isFinished: boolean;
+  #winner: Player; // player can't play if the game is finished
 
   constructor() {
     this.#GameBoard = [
@@ -37,17 +32,6 @@ class TicTacToe {
       ["", "", ""],
       ["", "", ""],
     ];
-    this.isFinished = false;
-  }
-
-  move(player: Player, x: number, y: number) {
-    if (this.#GameBoard[x][y] == "" && !this.isFinished) {
-      this.#GameBoard[x][y] = player.mark;
-      if (this.#foundWinner(player)) {
-        this.#endGame(player);
-      }
-    } else console.log("Invalid!");
-    return this.#GameBoard;
   }
 
   #checkRow(player: Player, index: number, toColumn: boolean = false) {
@@ -84,9 +68,13 @@ class TicTacToe {
     return this.#checkCross(player) || this.#checkCross(player, true);
   }
 
-  #endGame(winner: Player) {
-    winner.won();
-    this.isFinished = true;
+  move(player: Player, x: number, y: number) {
+    if (this.#GameBoard[x][y] == "" && !this.#winner) {
+      this.#GameBoard[x][y] = player.mark;
+      if (this.#foundWinner(player)) {
+        this.#winner = player; // winner
+      }
+    }
   }
 }
 
