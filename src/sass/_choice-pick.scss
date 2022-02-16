@@ -1,8 +1,48 @@
 @use "./color";
 
-header {
+@mixin flex-between {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  align-items: center;
+};
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+};
+
+header {
+  @include flex-between;
+
+  .logo-container {
+    @include flex-center;
+    width: 100%;
+  }
+
+  .turn {
+    @include flex-between;
+    gap: 10px;
+    
+    color: $light-color;
+    background-color: $dark-color;
+
+    border-radius: 9px;
+    padding: 10px 20px;
+  }
+
+  .reset {
+    height: 50px;
+    box-shadow: 0 5px $light-shadow ;
+
+    color: $dark-color;
+    background-color: $light-color;
+
+    &:active {
+      box-shadow:none;
+      transform: translateY(5px);
+    }
+  }
 }
 
 main {
