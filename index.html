@@ -13,10 +13,11 @@
 </head>
 
 <body>
-  <header>
-    <img src="./assets/images/logo.svg" alt="logo">
-  </header>
   <main>
+    <header>
+      <div class="logo-container"><img class="logo" src="./assets/images/logo.svg" alt="logo"></div>
+    </header>
+
     <div class="choice">
       <p class="choice__desc">Pick player's mark</p>
       <div class="choice__pick">
@@ -27,38 +28,12 @@
       </div>
       <p class="choice__desc choice__desc--faded">Reminder: X goes first</p>
     </div>
+    
     <div class="start">
       <button id="btnCPU" class="start__btn start__btn--orange">New game (Vs CPU)</button>
       <button class="start__btn start__btn--blue">New game (Vs Player)</button>
     </div>
   </main>
-  <!-- <main>
-    <div class="board">
-      <div id="0" class="board__choice"></div>
-      <div id="1" class="board__choice"></div>
-      <div id="2" class="board__choice"></div>
-      <div id="3" class="board__choice"></div>
-      <div id="4" class="board__choice"></div>
-      <div id="5" class="board__choice"></div>
-      <div id="6" class="board__choice"></div>
-      <div id="7" class="board__choice"></div>
-      <div id="8" class="board__choice"></div>
-    </div>
-    <div class="score">
-      <div class="score__btn score--user">
-        <div class="score__player">You</div>
-        <div class="score__scrore">0</div>
-      </div>
-      <div class="score__btn score--ties">
-        <div class="score__player">Ties</div>
-        <div class="score__scrore">0</div>
-      </div>
-      <div class="score__btn score--opponent">
-        <div class="score__player">CPU</div>
-        <div class="score__scrore">0</div>
-      </div>
-    </div>
-  </main> -->
   <script type="module" src="./dist/javascript/index.js"></script>
 </body>
 
