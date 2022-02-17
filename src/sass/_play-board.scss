@@ -10,6 +10,12 @@
   border-radius: 10px;
 }
 
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .board {
   @include grig-3();
 
@@ -61,5 +67,37 @@
 
   &--opponent {
     background-color: $playerB;
+  }
+}
+
+.announced__container {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+
+  background-color: rgba(0, 0, 0, 0.5);
+  @include flex-center();
+
+  .announced {
+    width: 100vw;
+    padding: 40px 0;
+
+    color: $light-color;
+    background-color: $dark-color;
+
+    @include flex-center();
+    flex-direction: column;
+    gap: 20px;
+
+    &__winner {
+      @include flex-center();
+      gap: 20px;
+      font-size: 2em;
+    }
+
+    &__option {
+      @include flex-center();
+      gap: 10px;
+    }
   }
 }
