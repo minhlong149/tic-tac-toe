@@ -16,6 +16,16 @@
   align-items: center;
 }
 
+header {
+  .btn--white {
+    box-shadow: 0 5px $light-shadow;
+    &:active {
+      box-shadow: none;
+      transform: translateY(5px);
+    }
+  }
+}
+
 .board {
   @include grig-3();
 
@@ -45,7 +55,7 @@
 
   &__btn {
     text-align: center;
-    padding: .8em 0;
+    padding: 0.8em 0;
     @include round-conner();
   }
 

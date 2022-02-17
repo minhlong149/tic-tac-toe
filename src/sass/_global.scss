@@ -3,7 +3,7 @@
 @mixin textStyle {
   text-transform: uppercase;
   font-weight: bold;
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 1.1em;
 }
 
@@ -31,5 +31,29 @@ button {
 
   &:hover {
     cursor: pointer;
+  }
+}
+
+.btn {
+  $shadow-length: 8px;
+
+  &--white {
+    background-color: $light-color;
+    box-shadow: 0 $shadow-length $light-shadow;
+  }
+
+  &--orange {
+    background-color: $playerB;
+    box-shadow: 0 $shadow-length $playerB-shadow;
+  }
+
+  &--blue {
+    background-color: $playerA;
+    box-shadow: 0 $shadow-length $playerA-shadow;
+  }
+
+  &:active {
+    box-shadow: none;
+    transform: translateY($shadow-length);
   }
 }
