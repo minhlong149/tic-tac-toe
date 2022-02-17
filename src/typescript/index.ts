@@ -59,7 +59,7 @@ function getButtonIndex(button) {
   }
 }
 
-let newGame: TicTacToe;
+let gameRecord: Array<TicTacToe> = [];
 
 /**
  * USER SELECT THEIR MARK & CHOOSE AN OPPONENT
@@ -94,13 +94,24 @@ choiceButtons.forEach((button) => {
 
 const buttonCPU = document.querySelector("#btnUser");
 buttonCPU.addEventListener("click", () => {
-  newGame = buttonX.classList.contains("choice__btn--pick")
+  let newGame = buttonX.classList.contains("choice__btn--pick")
     ? new TicTacToe("x", "o")
     : new TicTacToe("o", "x");
 
   // Create HTML game board
   const main = document.querySelector("main");
   main.innerHTML = playBoard;
+
+  // Update score mark
+  const userScore = document.querySelector(".score--user");
+  const userMark = userScore.querySelector(".score__player");
+  userMark.textContent += ` (${newGame.user.mark})`;
+  // const userScorePoint = userScore.querySelector(".score__score");
+  // userScorePoint.textContent = `${newGame.user.getScore()}`;
+
+  const opponentScore = document.querySelector(".score--opponent");
+  const opponentMark = opponentScore.querySelector(".score__player");
+  opponentMark.textContent += ` (${newGame.opponent.mark})`;
 
   // Player make a move
   const boardChoices = document.querySelectorAll(".board__choice");
@@ -112,10 +123,36 @@ buttonCPU.addEventListener("click", () => {
         button.innerHTML = `<img src="../../assets/images/icon-${newGame.playerTurn.mark}.svg">`; //
         newGame.move(buttonIndex[0], buttonIndex[1]);
 
-        // Switch turn icon
-        const turnIcon = document.querySelector(".turn__icon") as HTMLImageElement;
-        turnIcon.src = `./assets/images/icon-${newGame.playerTurn.mark}-gray.svg`;
+        if (newGame.winner) {
+          // Announced winner
+          gameRecord.push(newGame)
+          console.log(gameRecord);
+
+          // Printout HTML
+        } else {
+          // Switch turn icon
+          const turnIcon = document.querySelector(
+            ".turn__icon"
+          ) as HTMLImageElement;
+          turnIcon.src = `./assets/images/icon-${newGame.playerTurn.mark}-gray.svg`;
+        }
       }
     });
+  });
+
+  // Reset button
+  const resetButton = document.querySelector(".reset");
+  resetButton.addEventListener("click", () => {
+    if (newGame.foundWinner()) {
+      newGame.resetGameBoard();
+      const choicePick = document.querySelectorAll(".board__choice");
+      choicePick.forEach((choice) => {
+        choice.textContent = "";
+      });
+      const turnIcon = document.querySelector(
+        ".turn__icon"
+      ) as HTMLImageElement;
+      turnIcon.src = `./assets/images/icon-${newGame.playerTurn.mark}-gray.svg`;
+    }
   });
 });

@@ -6,11 +6,19 @@ class Player {
     this.mark = mark;
     this.#score = 0;
   }
+
+  won() {
+    this.#score++;
+  }
+
+  getScore() {
+    return this.#score;
+  }
 }
 
 class TicTacToe {
-  #user: Player;
-  #opponent: Player;
+  user: Player;
+  opponent: Player;
   playerTurn: Player;
 
   #GameBoard: [
@@ -19,12 +27,12 @@ class TicTacToe {
     [string, string, string]
   ];
 
-  #winner: Player; // player can't play if the game is finished
+  winner: Player; // player can't play if the game is finished
 
   constructor(userMark: string, opponentMark: string) {
-    this.#user = new Player(userMark);
-    this.#opponent = new Player(opponentMark);
-    this.playerTurn = userMark == "x" ? this.#user : this.#opponent;
+    this.user = new Player(userMark);
+    this.opponent = new Player(opponentMark);
+    this.playerTurn = userMark == "x" ? this.user : this.opponent;
 
     this.#GameBoard = [
       ["", "", ""],
@@ -55,7 +63,7 @@ class TicTacToe {
     return true;
   }
 
-  foundWinner(player: Player) {
+  foundWinner(player: Player = this.playerTurn) {
     for (let i = 0; i < 3; ++i) {
       if (this.#checkRow(player, i)) {
         return true;
@@ -68,18 +76,29 @@ class TicTacToe {
   }
 
   movable(x: number, y: number) {
-    return this.#GameBoard[x][y] == "" && !this.#winner;
+    return this.#GameBoard[x][y] == "" && !this.winner;
   }
 
   move(x: number, y: number, player: Player = this.playerTurn) {
     if (this.movable(x, y)) {
       this.#GameBoard[x][y] = player.mark;
       if (this.foundWinner(player)) {
-        this.#winner = player; // winner
+        this.winner = player;
+        this.winner.won();
       }
+
       this.playerTurn =
-        this.playerTurn == this.#user ? this.#opponent : this.#user;
+        this.playerTurn == this.user ? this.opponent : this.user;
     }
+  }
+
+  resetGameBoard() {
+    this.#GameBoard = [
+      ["", "", ""],
+      ["", "", ""],
+      ["", "", ""],
+    ];
+    this.playerTurn = this.user.mark == "x" ? this.user : this.opponent;
   }
 }
 
