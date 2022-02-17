@@ -85,10 +85,10 @@ class TicTacToe {
       if (this.foundWinner(player)) {
         this.winner = player;
         this.winner.won();
+      } else {
+        this.playerTurn =
+          this.playerTurn == this.user ? this.opponent : this.user;
       }
-
-      this.playerTurn =
-        this.playerTurn == this.user ? this.opponent : this.user;
     }
   }
 
@@ -99,6 +99,7 @@ class TicTacToe {
       ["", "", ""],
     ];
     this.playerTurn = this.user.mark == "x" ? this.user : this.opponent;
+    this.winner = undefined;
   }
 }
 

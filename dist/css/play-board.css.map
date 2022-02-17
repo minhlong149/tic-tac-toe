@@ -1,0 +1,10 @@
+{
+    "version": 3,
+    "mappings": "AAEA,AAAA,MAAM,CAAC;EACL,OAAO,EAAE,IAAI;EACb,qBAAqB,EAAE,WAAW;EAClC,GAAG,EAAE,IAAI;CAKV;;AARD,AAKE,MALI,CAKJ,cAAc,CAAC;EACb,gBAAgB,ECIP,OAAO;CDHjB",
+    "sources": [
+        "../../src/sass/play-board.scss",
+        "../../src/sass/_color.scss"
+    ],
+    "names": [],
+    "file": "play-board.css"
+}

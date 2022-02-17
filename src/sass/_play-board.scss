@@ -103,6 +103,14 @@ header {
       @include flex-center();
       gap: 20px;
       font-size: 2em;
+
+      .winner-x {
+        color: $playerA;
+      }
+
+      .winner-o {
+        color: $playerB;
+      }
     }
 
     &__option {
