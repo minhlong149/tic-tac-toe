@@ -1,14 +1,18 @@
 class Player {
   mark: string;
-  score: number;
+  #score: number;
 
   constructor(mark: string) {
     this.mark = mark;
-    this.score = 0;
+    this.#score = 0;
   }
 }
 
 class TicTacToe {
+  #user: Player;
+  #opponent: Player;
+  playerTurn: Player;
+
   #GameBoard: [
     [string, string, string],
     [string, string, string],
@@ -17,7 +21,11 @@ class TicTacToe {
 
   #winner: Player; // player can't play if the game is finished
 
-  constructor() {
+  constructor(userMark: string, opponentMark: string) {
+    this.#user = new Player(userMark);
+    this.#opponent = new Player(opponentMark);
+    this.playerTurn = userMark == "x" ? this.#user : this.#opponent;
+
     this.#GameBoard = [
       ["", "", ""],
       ["", "", ""],
@@ -47,7 +55,7 @@ class TicTacToe {
     return true;
   }
 
-  #foundWinner(player: Player) {
+  foundWinner(player: Player) {
     for (let i = 0; i < 3; ++i) {
       if (this.#checkRow(player, i)) {
         return true;
@@ -59,18 +67,20 @@ class TicTacToe {
     return this.#checkCross(player) || this.#checkCross(player, true);
   }
 
-  move(player: Player, x: number, y: number) {
-    if (this.#GameBoard[x][y] == "" && !this.#winner) {
+  movable(x: number, y: number) {
+    return this.#GameBoard[x][y] == "" && !this.#winner;
+  }
+
+  move(x: number, y: number, player: Player = this.playerTurn) {
+    if (this.movable(x, y)) {
       this.#GameBoard[x][y] = player.mark;
-      if (this.#foundWinner(player)) {
+      if (this.foundWinner(player)) {
         this.#winner = player; // winner
       }
+      this.playerTurn =
+        this.playerTurn == this.#user ? this.#opponent : this.#user;
     }
   }
 }
 
-// let user = new Player("x");
-// let opponent = new Player("o");
-// let newGame = new TicTacToe();
-
-export { Player, TicTacToe };
+export { TicTacToe };
