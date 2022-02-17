@@ -7,7 +7,7 @@ const playBoard = `
       <img class="turn__icon" src="./assets/images/icon-x-gray.svg" width="20px" alt="player-turn-icon">
       <span>Turn</span>
     </div>
-    <button class="reset"><img src="./assets/images/icon-restart.svg" alt="reset-icon"></button>
+    <button class="reset btn btn--white"><img src="./assets/images/icon-restart.svg" alt="reset-icon"></button>
   </header>
    <div class="board">
       <div id="0" class="board__choice"></div>
@@ -143,7 +143,7 @@ buttonCPU.addEventListener("click", () => {
   // Reset button
   const resetButton = document.querySelector(".reset");
   resetButton.addEventListener("click", () => {
-    if (newGame.foundWinner()) {
+    if (!newGame.winner) {
       newGame.resetGameBoard();
       const choicePick = document.querySelectorAll(".board__choice");
       choicePick.forEach((choice) => {
