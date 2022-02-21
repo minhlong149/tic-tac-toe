@@ -62,11 +62,7 @@ const playBoardHTML = `
   </main>
 `;
 
-/**
- * USER SELECT THEIR MARK & CHOOSE AN OPPONENT
- */
-
-function choicePick() {
+(function choicePick() {
   // Reset play board HTMl
   const body = document.querySelector("body");
   body.innerHTML = choicePickHTML;
@@ -95,16 +91,30 @@ function choicePick() {
     });
   });
 
-  /**
-   * PLAY WITH ANOTHER USER
-   */
+  function getButtonIndex(button) {
+    switch (button.id) {
+      case "0":
+        return [0, 0];
+      case "1":
+        return [0, 1];
+      case "2":
+        return [0, 2];
+      case "3":
+        return [1, 0];
+      case "4":
+        return [1, 1];
+      case "5":
+        return [1, 2];
+      case "6":
+        return [2, 0];
+      case "7":
+        return [2, 1];
+      case "8":
+        return [2, 2];
+    }
+  }
 
-  function playWithPlayer() {
-    let newGame = buttonX.classList.contains("choice__btn--pick")
-      ? new TicTacToe("x", "o")
-      : new TicTacToe("o", "x");
-
-    // Create HTML game board
+  function createBoard(game: TicTacToe) {
     const main = document.querySelector("main");
     main.innerHTML = playBoardHTML;
 
@@ -112,59 +122,43 @@ function choicePick() {
     const opponentScore = document.querySelector(".score--opponent");
 
     const userMark = userScore.querySelector(".score__player");
-    userMark.textContent += ` (${newGame.user.mark})`;
+    userMark.textContent += ` (${game.user.mark})`;
 
     const opponentMark = opponentScore.querySelector(".score__player");
-    opponentMark.textContent += ` (${newGame.opponent.mark})`;
+    opponentMark.textContent += ` (${game.opponent.mark})`;
+  }
 
-    function resetBoard(game: TicTacToe) {
-      game.resetGameBoard();
+  function resetBoard(game: TicTacToe) {
+    game.resetGameBoard();
 
-      // Set turn icon to x
-      const turnIcon = document.querySelector(
-        ".turn__icon"
-      ) as HTMLImageElement;
-      turnIcon.src = `./assets/images/icon-x-gray.svg`;
+    // Set turn icon to x
+    const turnIcon = document.querySelector(".turn__icon") as HTMLImageElement;
+    turnIcon.src = `./assets/images/icon-x-gray.svg`;
 
-      // Empty board choices
-      const choicePick = document.querySelectorAll(".board__choice");
-      choicePick.forEach((choice) => {
-        choice.innerHTML = "";
-      });
+    // Empty board choices
+    const choicePick = document.querySelectorAll(".board__choice");
+    choicePick.forEach((choice) => {
+      choice.innerHTML = "";
+    });
 
-      // Update scoreboard
+    // Update scoreboard
+    const userScore = document.querySelector(".score--user");
+    const opponentScore = document.querySelector(".score--opponent");
 
-      const userScorePoint = userScore.querySelector(".score__score");
-      userScorePoint.textContent = `${game.user.getScore()}`;
+    const userScorePoint = userScore.querySelector(".score__score");
+    userScorePoint.textContent = `${game.user.getScore()}`;
 
-      const opponentScorePoint = opponentScore.querySelector(".score__score");
-      opponentScorePoint.textContent = `${game.opponent.getScore()}`;
-    }
+    const opponentScorePoint = opponentScore.querySelector(".score__score");
+    opponentScorePoint.textContent = `${game.opponent.getScore()}`;
+  }
 
-    function getButtonIndex(button) {
-      switch (button.id) {
-        case "0":
-          return [0, 0];
-        case "1":
-          return [0, 1];
-        case "2":
-          return [0, 2];
-        case "3":
-          return [1, 0];
-        case "4":
-          return [1, 1];
-        case "5":
-          return [1, 2];
-        case "6":
-          return [2, 0];
-        case "7":
-          return [2, 1];
-        case "8":
-          return [2, 2];
-      }
-    }
+  const buttonUser = document.querySelector("#btnUser");
+  buttonUser.addEventListener("click", () => {
+    let newGame = buttonX.classList.contains("choice__btn--pick")
+      ? new TicTacToe("x", "o")
+      : new TicTacToe("o", "x");
 
-    resetBoard(newGame);
+    createBoard(newGame);
 
     // Player make a move
     const boardChoices = document.querySelectorAll(".board__choice");
@@ -231,12 +225,20 @@ function choicePick() {
     const resetButton = document.querySelector(".reset");
     resetButton.addEventListener("click", () => {
       resetBoard(newGame);
-      console.log(newGame);
     });
-  }
+  });
 
-  const buttonCPU = document.querySelector("#btnUser");
-  buttonCPU.addEventListener("click", playWithPlayer);
-}
+  const buttonCPU = document.querySelector("#btnCPU");
+  buttonCPU.addEventListener("click", () => {
+    let newGame = buttonX.classList.contains("choice__btn--pick")
+      ? new TicTacToe("x", "o")
+      : new TicTacToe("o", "x");
 
-choicePick();
+    createBoard(newGame);
+
+    const resetButton = document.querySelector(".reset");
+    resetButton.addEventListener("click", () => {
+      resetBoard(newGame);
+    });
+  });
+})();
