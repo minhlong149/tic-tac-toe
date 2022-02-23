@@ -144,12 +144,16 @@ const playBoardHTML = `
     // Update scoreboard
     const userScore = document.querySelector(".score--user");
     const opponentScore = document.querySelector(".score--opponent");
+    const tiesScore = document.querySelector(".score--ties");
 
     const userScorePoint = userScore.querySelector(".score__score");
     userScorePoint.textContent = `${game.user.getScore()}`;
 
     const opponentScorePoint = opponentScore.querySelector(".score__score");
     opponentScorePoint.textContent = `${game.opponent.getScore()}`;
+
+    const tiesScorePoint = tiesScore.querySelector(".score__score");
+    tiesScorePoint.textContent = `${game.ties}`;
   }
 
   const buttonUser = document.querySelector("#btnUser");
@@ -210,6 +214,8 @@ const playBoardHTML = `
             quit.addEventListener("click", () => {
               choicePick();
             });
+          } else if (newGame.isTies()) {
+            resetBoard(newGame);
           } else {
             // Switch turn icon
             const turnIcon = document.querySelector(
