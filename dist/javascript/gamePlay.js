@@ -16,12 +16,14 @@ class TicTacToe {
     user;
     opponent;
     playerTurn;
+    ties;
     #GameBoard;
     winner; // player can't play if the game is finished
     constructor(userMark, opponentMark) {
         this.user = new Player(userMark);
         this.opponent = new Player(opponentMark);
         this.playerTurn = userMark == "x" ? this.user : this.opponent;
+        this.ties = 0;
         this.#GameBoard = [
             ["", "", ""],
             ["", "", ""],
@@ -89,6 +91,15 @@ class TicTacToe {
         ];
         this.playerTurn = this.user.mark == "x" ? this.user : this.opponent;
         this.winner = undefined;
+    }
+    isTies() {
+        for (let i = 0; i < 3; ++i)
+            for (let j = 0; j < 3; ++j) {
+                if (this.#GameBoard[i][j] == "")
+                    return false;
+            }
+        this.ties++;
+        return true;
     }
 }
 export { TicTacToe };

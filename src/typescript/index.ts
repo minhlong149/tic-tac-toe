@@ -91,32 +91,15 @@ const playBoardHTML = `
     });
   });
 
-  function getButtonIndex(button) {
-    switch (button.id) {
-      case "0":
-        return [0, 0];
-      case "1":
-        return [0, 1];
-      case "2":
-        return [0, 2];
-      case "3":
-        return [1, 0];
-      case "4":
-        return [1, 1];
-      case "5":
-        return [1, 2];
-      case "6":
-        return [2, 0];
-      case "7":
-        return [2, 1];
-      case "8":
-        return [2, 2];
-    }
+  function getX(button) {
+    return Math.floor(Number(button.id) / 3);
+  }
+  function getY(button) {
+    return Math.floor(Number(button.id) % 3);
   }
 
   function createBoard(game: TicTacToe) {
-    const main = document.querySelector("main");
-    main.innerHTML = playBoardHTML;
+    body.innerHTML = playBoardHTML;
 
     const userScore = document.querySelector(".score--user");
     const opponentScore = document.querySelector(".score--opponent");
@@ -156,6 +139,60 @@ const playBoardHTML = `
     tiesScorePoint.textContent = `${game.ties}`;
   }
 
+  function checkWinner(game: TicTacToe) {
+    if (game.foundWinner()) {
+      // Announce result
+      const announcedHTML = `
+        <div class="announced">
+          <div class="announced__state">You ${
+            game.winner == game.user ? "win" : "lose"
+          }!</div>
+          <div class="announced__winner">
+            <img src="./assets/images/icon-${game.winner.mark}.svg" alt="">
+            <span class="winner-${game.winner.mark}">take the round</span>
+          </div>
+          <div class="announced__option">
+            <button id="quit" class="announced__button btn btn--white">Quit</button>
+            <button id="new-game" class="announced__button btn btn--orange">New Game</button>
+          </div>
+        </div>
+          `;
+      const announced = document.createElement("div");
+      announced.classList.add("announced__container");
+      announced.innerHTML = announcedHTML;
+
+      const body = document.querySelector("body");
+      body.appendChild(announced);
+
+      // Continues playing
+      const newGameButton = document.querySelector("#new-game");
+      newGameButton.addEventListener("click", () => {
+        resetBoard(game);
+        announced.remove();
+      });
+
+      // Quit game
+      const quit = document.querySelector("#quit");
+      quit.addEventListener("click", () => {
+        choicePick();
+      });
+    } else if (game.isTies()) {
+      resetBoard(game);
+    } else {
+      // Switch turn icon
+      const turnIcon = document.querySelector(
+        ".turn__icon"
+      ) as HTMLImageElement;
+      turnIcon.src = `./assets/images/icon-${game.playerTurn.mark}-gray.svg`;
+    }
+  }
+
+  function playerMove(game: TicTacToe, button, x: number, y: number) {
+    button.innerHTML = `<img src="../../assets/images/icon-${game.playerTurn.mark}.svg">`; //
+    game.move(x, y);
+    checkWinner(game);
+  }
+
   const buttonUser = document.querySelector("#btnUser");
   buttonUser.addEventListener("click", () => {
     let newGame = buttonX.classList.contains("choice__btn--pick")
@@ -167,62 +204,9 @@ const playBoardHTML = `
     // Player make a move
     const boardChoices = document.querySelectorAll(".board__choice");
     boardChoices.forEach((button) => {
-      const buttonIndex = getButtonIndex(button);
       button.addEventListener("click", () => {
-        if (newGame.movable(buttonIndex[0], buttonIndex[1])) {
-          // Update move
-          button.innerHTML = `<img src="../../assets/images/icon-${newGame.playerTurn.mark}.svg">`; //
-          newGame.move(buttonIndex[0], buttonIndex[1]);
-
-          if (newGame.foundWinner()) {
-            // Announce result
-            const announcedHTML = `
-              <div class="announced">
-                <div class="announced__state">You ${
-                  newGame.winner == newGame.user ? "win" : "lose"
-                }!</div>
-                <div class="announced__winner">
-                  <img src="./assets/images/icon-${
-                    newGame.winner.mark
-                  }.svg" alt="">
-                  <span class="winner-${
-                    newGame.winner.mark
-                  }">take the round</span>
-                </div>
-                <div class="announced__option">
-                  <button id="quit" class="announced__button btn btn--white">Quit</button>
-                  <button id="new-game" class="announced__button btn btn--orange">New Game</button>
-                </div>
-              </div>
-          `;
-            const announced = document.createElement("div");
-            announced.classList.add("announced__container");
-            announced.innerHTML = announcedHTML;
-
-            const body = document.querySelector("body");
-            body.appendChild(announced);
-
-            // Continues playing
-            const newGameButton = document.querySelector("#new-game");
-            newGameButton.addEventListener("click", () => {
-              resetBoard(newGame);
-              announced.remove();
-            });
-
-            // Quit game
-            const quit = document.querySelector("#quit");
-            quit.addEventListener("click", () => {
-              choicePick();
-            });
-          } else if (newGame.isTies()) {
-            resetBoard(newGame);
-          } else {
-            // Switch turn icon
-            const turnIcon = document.querySelector(
-              ".turn__icon"
-            ) as HTMLImageElement;
-            turnIcon.src = `./assets/images/icon-${newGame.playerTurn.mark}-gray.svg`;
-          }
+        if (newGame.movable(getX(button), getY(button))) {
+          playerMove(newGame, button, getX(button), getY(button));
         }
       });
     });
@@ -241,6 +225,36 @@ const playBoardHTML = `
       : new TicTacToe("o", "x");
 
     createBoard(newGame);
+
+    // TODO: CPU make a move if its goes first
+
+    // Player make a move
+    const boardChoices = document.querySelectorAll(".board__choice");
+    boardChoices.forEach((button) => {
+      button.addEventListener("click", () => {
+        if (newGame.movable(getX(button), getY(button))) {
+          playerMove(newGame, button, getX(button), getY(button));
+
+          if (!newGame.foundWinner()) {
+            /**
+             * CPU make a move
+             * TODO: Make move smarter
+             */
+
+            let randomX: number;
+            let randomY: number;
+
+            do {
+              randomX = Math.round(Math.random() * 2);
+              randomY = Math.round(Math.random() * 2);
+            } while (!newGame.movable(randomX, randomY));
+
+            const target = boardChoices[`${3 * randomX + randomY}`];
+            playerMove(newGame, target, randomX, randomY);
+          }
+        }
+      });
+    });
 
     const resetButton = document.querySelector(".reset");
     resetButton.addEventListener("click", () => {
