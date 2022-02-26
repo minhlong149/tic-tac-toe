@@ -81,12 +81,12 @@ const playBoardHTML = `
         buttonO.classList.toggle("choice__btn--pick");
 
         imageX.src = buttonX.classList.contains("choice__btn--pick")
-          ? "../../assets/images/icon-x-dark.svg"
-          : "../../assets/images/icon-x-gray.svg";
+          ? "./assets/images/icon-x-dark.svg"
+          : "./assets/images/icon-x-gray.svg";
 
         imageO.src = buttonO.classList.contains("choice__btn--pick")
-          ? "../../assets/images/icon-o-dark.svg"
-          : "../../assets/images/icon-o-gray.svg";
+          ? "./assets/images/icon-o-dark.svg"
+          : "./assets/images/icon-o-gray.svg";
       }
     });
   });
@@ -188,7 +188,7 @@ const playBoardHTML = `
   }
 
   function playerMove(game: TicTacToe, button, x: number, y: number) {
-    button.innerHTML = `<img src="../../assets/images/icon-${game.playerTurn.mark}.svg">`; //
+    button.innerHTML = `<img src="./assets/images/icon-${game.playerTurn.mark}.svg">`; //
     game.move(x, y);
     checkWinner(game);
   }
