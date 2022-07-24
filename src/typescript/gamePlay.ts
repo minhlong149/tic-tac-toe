@@ -131,6 +131,102 @@ class TicTacToe {
     this.ties++;
     return true;
   }
+
+  cpuMove() {
+    let x, y: number;
+    do {
+      x = Math.round(Math.random() * 2);
+      y = Math.round(Math.random() * 2);
+    } while (!this.movable(x, y));
+
+    let score = [
+      [1, 0, 1],
+      [0, 2, 0],
+      [1, 0, 1],
+    ];
+
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        if (this.movable(i, j)) {
+          let checkBoard = this.#GameBoard.map((arr) => arr.slice());
+          checkBoard[i][j] = this.opponent.mark;
+
+          // Check if instant win
+          // Check row
+          if (
+            checkBoard[i][0] === this.opponent.mark &&
+            checkBoard[i][1] === this.opponent.mark &&
+            checkBoard[i][2] === this.opponent.mark
+          ) {
+            console.log("row win");
+
+            return [i, j];
+          }
+          // Check column
+          if (
+            checkBoard[0][j] === this.opponent.mark &&
+            checkBoard[1][j] === this.opponent.mark &&
+            checkBoard[2][j] === this.opponent.mark
+          ) {
+            console.log("col win");
+
+            return [i, j];
+          }
+          // Check cross
+          if (
+            checkBoard[0][0] === this.opponent.mark &&
+            checkBoard[1][1] === this.opponent.mark &&
+            checkBoard[2][2] === this.opponent.mark
+          ) {
+            console.log("cross win");
+
+            return [i, j];
+          }
+          if (
+            checkBoard[0][2] === this.opponent.mark &&
+            checkBoard[1][1] === this.opponent.mark &&
+            checkBoard[2][0] === this.opponent.mark
+          ) {
+            console.log("cross rev win");
+            return [i, j];
+          }
+
+          // Check user could win
+          checkBoard[i][j] = this.user.mark;
+
+          if (
+            checkBoard[i][0] === this.user.mark &&
+            checkBoard[i][1] === this.user.mark &&
+            checkBoard[i][2] === this.user.mark
+          ) {
+            return [i, j];
+          }
+          if (
+            checkBoard[0][j] === this.user.mark &&
+            checkBoard[1][j] === this.user.mark &&
+            checkBoard[2][j] === this.user.mark
+          ) {
+            return [i, j];
+          }
+          if (
+            checkBoard[0][0] === this.user.mark &&
+            checkBoard[1][1] === this.user.mark &&
+            checkBoard[2][2] === this.user.mark
+          ) {
+            return [i, j];
+          }
+          if (
+            checkBoard[0][2] === this.user.mark &&
+            checkBoard[1][1] === this.user.mark &&
+            checkBoard[2][0] === this.user.mark
+          ) {
+            return [i, j];
+          }
+        }
+      }
+    }
+    return [x, y];
+  }
 }
 
 export { TicTacToe };

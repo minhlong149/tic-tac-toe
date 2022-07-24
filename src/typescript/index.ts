@@ -164,7 +164,6 @@ const playBoardHTML = `
             cpuMove(newGame);
           }
         }
-        console.log(newGame.user.mark);
       });
       button.addEventListener("mouseenter", () => {
         if (newGame.movable(getX(button), getY(button))) {
@@ -211,8 +210,7 @@ const playBoardHTML = `
 
     const userMark = userScore.querySelector(".score__player");
     userMark.textContent =
-      `${game.user.mark == "x" ? "You" : "Player"} ` +
-      userMark.textContent;
+      `${game.user.mark == "x" ? "You" : "Player"} ` + userMark.textContent;
 
     const opponentMark = opponentScore.querySelector(".score__player");
     opponentMark.textContent =
@@ -282,18 +280,14 @@ const playBoardHTML = `
     const boardChoices = document.querySelectorAll(
       ".board__choice"
     ) as NodeListOf<HTMLButtonElement>;
+
     /**
      * CPU make a move
      * TODO: Make move smarter
      */
 
-    let randomX: number;
-    let randomY: number;
-
-    do {
-      randomX = Math.round(Math.random() * 2);
-      randomY = Math.round(Math.random() * 2);
-    } while (!newGame.movable(randomX, randomY));
+    const solu = newGame.cpuMove();
+    let [randomX, randomY] = [solu[0], solu[1]];
 
     const target = boardChoices[`${3 * randomX + randomY}`];
     playerMove(newGame, target, randomX, randomY);
