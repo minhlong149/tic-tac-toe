@@ -20,6 +20,7 @@ class TicTacToe {
   user: Player;
   opponent: Player;
   playerTurn: Player;
+  playerGoFirst: Player;
   ties: number;
 
   #GameBoard: [
@@ -33,7 +34,10 @@ class TicTacToe {
   constructor(userMark: string, opponentMark: string) {
     this.user = new Player(userMark);
     this.opponent = new Player(opponentMark);
-    this.playerTurn = userMark == "x" ? this.user : this.opponent;
+
+    this.playerTurn = this.user.mark == "x" ? this.user : this.opponent;
+    this.playerGoFirst = this.user.mark == "x" ? this.user : this.opponent;
+
     this.ties = 0;
     this.#GameBoard = [
       ["", "", ""],
@@ -86,6 +90,8 @@ class TicTacToe {
       if (this.foundWinner(player)) {
         this.winner = player;
         this.winner.won();
+        this.playerGoFirst =
+          this.winner == this.user ? this.opponent : this.user;
       } else {
         this.playerTurn =
           this.playerTurn == this.user ? this.opponent : this.user;
@@ -99,7 +105,22 @@ class TicTacToe {
       ["", "", ""],
       ["", "", ""],
     ];
-    this.playerTurn = this.user.mark == "x" ? this.user : this.opponent;
+
+    if (this.isTies() || !this.winner) {
+      // Game not complete
+      if (this.isTies()) {
+        // PLayer go second last game goes first
+        this.playerTurn =
+          this.playerGoFirst == this.user ? this.opponent : this.user;
+        this.ties++;
+      } else {
+        // Game reset, who goes first keep go first
+        this.playerTurn = this.playerGoFirst;
+      }
+    } else {
+      // game complete
+      this.playerTurn = this.winner == this.user ? this.opponent : this.user;
+    }
     this.winner = undefined;
   }
 
@@ -108,7 +129,6 @@ class TicTacToe {
       for (let j = 0; j < 3; ++j) {
         if (this.#GameBoard[i][j] == "") return false;
       }
-    this.ties++;
     return true;
   }
 }

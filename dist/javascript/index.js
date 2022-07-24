@@ -8,10 +8,12 @@ const choicePickHTML = `
     <div class="choice">
       <p class="choice__desc">Pick player's mark</p>
       <div class="choice__pick">
-        <button id="btnX" class="choice__btn choice__btn--pick"><img id="imgX" src="./assets/images/icon-x-dark.svg" alt="o" height="60px"
-            width="60px"></button>
-        <button id="btnO"class="choice__btn"><img id="imgO"src="./assets/images/icon-o-gray.svg" alt="x" height="60px"
-            width="60px"></button>
+        <button id="btnX" class="choice__btn choice__btn--pick">
+          <img id="imgX" src="./assets/images/icon-x-dark.svg" alt="o" height="60px" width="60px">
+        </button>
+        <button id="btnO"class="choice__btn">
+          <img id="imgO"src="./assets/images/icon-o-gray.svg" alt="x" height="60px"width="60px">
+        </button>
       </div>
       <p class="choice__desc choice__desc--faded">Reminder: X goes first</p>
     </div>
@@ -45,7 +47,7 @@ const playBoardHTML = `
     </div>
     <div class="score">
       <div class="score__btn score--user">
-        <div class="score__player">You</div>
+        <div class="score__player">(X)</div>
         <div class="score__score">0</div>
       </div>
       <div class="score__btn score--ties">
@@ -53,7 +55,7 @@ const playBoardHTML = `
         <div class="score__score">0</div>
       </div>
       <div class="score__btn score--opponent">
-        <div class="score__player">CPU</div>
+        <div class="score__player">(O)</div>
         <div class="score__score">0</div>
       </div>
     </div>
@@ -61,7 +63,7 @@ const playBoardHTML = `
 `;
 (function choicePick() {
     // Reset play board HTMl
-    const body = document.querySelector("body");
+    const body = document.body;
     body.innerHTML = choicePickHTML;
     // Choice toggle
     const buttonX = document.querySelector("#btnX");
@@ -83,41 +85,137 @@ const playBoardHTML = `
             }
         });
     });
-    function getX(button) {
-        return Math.floor(Number(button.id) / 3);
-    }
-    function getY(button) {
-        return Math.floor(Number(button.id) % 3);
-    }
+    // PLay vs. Player
+    const buttonUser = document.querySelector("#btnUser");
+    buttonUser.addEventListener("click", () => {
+        // Create a game
+        let newGame = buttonX.classList.contains("choice__btn--pick")
+            ? new TicTacToe("x", "o")
+            : new TicTacToe("o", "x");
+        createBoard(newGame);
+        // Player make a move
+        const boardChoices = document.querySelectorAll(".board__choice");
+        boardChoices.forEach((button) => {
+            button.addEventListener("click", () => {
+                if (newGame.movable(getX(button), getY(button))) {
+                    playerMove(newGame, button, getX(button), getY(button));
+                }
+            });
+            button.addEventListener("mouseenter", () => {
+                if (newGame.movable(getX(button), getY(button))) {
+                    button.innerHTML = `<img src="./assets/images/icon-${newGame.playerTurn.mark}-gray.svg">`;
+                }
+            });
+            button.addEventListener("mouseleave", () => {
+                if (newGame.movable(getX(button), getY(button))) {
+                    button.innerHTML = ``;
+                }
+            });
+        });
+        // Reset board in-game
+        const resetButton = document.querySelector(".reset");
+        resetButton.addEventListener("click", () => {
+            resetBoard(newGame);
+        });
+    });
+    // PLay vs. computer
+    const buttonCPU = document.querySelector("#btnCPU");
+    buttonCPU.addEventListener("click", () => {
+        let newGame = buttonX.classList.contains("choice__btn--pick")
+            ? new TicTacToe("x", "o")
+            : new TicTacToe("o", "x");
+        createBoard(newGame);
+        // CPU make a move if its goes first
+        if (newGame.playerTurn.mark == "x" && newGame.opponent.mark == "x") {
+            cpuMove(newGame);
+        }
+        // Player make a move
+        const boardChoices = document.querySelectorAll(".board__choice");
+        boardChoices.forEach((button) => {
+            button.addEventListener("click", () => {
+                if (newGame.movable(getX(button), getY(button))) {
+                    playerMove(newGame, button, getX(button), getY(button));
+                    // CPU move after
+                    if (!newGame.foundWinner()) {
+                        cpuMove(newGame);
+                    }
+                }
+                console.log(newGame.user.mark);
+            });
+            button.addEventListener("mouseenter", () => {
+                if (newGame.movable(getX(button), getY(button))) {
+                    button.innerHTML = `<img src="./assets/images/icon-${newGame.playerTurn.mark}-gray.svg">`;
+                }
+            });
+            button.addEventListener("mouseleave", () => {
+                if (newGame.movable(getX(button), getY(button))) {
+                    button.innerHTML = ``;
+                }
+            });
+        });
+        const resetButton = document.querySelector(".reset");
+        resetButton.addEventListener("click", () => {
+            resetBoard(newGame);
+        });
+    });
+    // Functions
     function createBoard(game) {
         body.innerHTML = playBoardHTML;
         const userScore = document.querySelector(".score--user");
         const opponentScore = document.querySelector(".score--opponent");
         const userMark = userScore.querySelector(".score__player");
-        userMark.textContent += ` (${game.user.mark})`;
+        userMark.textContent =
+            `${game.user.mark == "x" ? "You" : "CPU"} ` + userMark.textContent;
         const opponentMark = opponentScore.querySelector(".score__player");
-        opponentMark.textContent += ` (${game.opponent.mark})`;
+        opponentMark.textContent =
+            `${game.opponent.mark == "o" ? "CPU" : "You"} ` +
+                opponentMark.textContent;
     }
     function resetBoard(game) {
         game.resetGameBoard();
         // Set turn icon to x
         const turnIcon = document.querySelector(".turn__icon");
-        turnIcon.src = `./assets/images/icon-x-gray.svg`;
+        turnIcon.src = `./assets/images/icon-${game.playerTurn.mark == "o" ? "o" : "x"}-gray.svg`;
         // Empty board choices
         const choicePick = document.querySelectorAll(".board__choice");
         choicePick.forEach((choice) => {
             choice.innerHTML = "";
         });
         // Update scoreboard
-        const userScore = document.querySelector(".score--user");
-        const opponentScore = document.querySelector(".score--opponent");
+        const xScore = document.querySelector(".score--user");
+        const oScore = document.querySelector(".score--opponent");
         const tiesScore = document.querySelector(".score--ties");
-        const userScorePoint = userScore.querySelector(".score__score");
-        userScorePoint.textContent = `${game.user.getScore()}`;
-        const opponentScorePoint = opponentScore.querySelector(".score__score");
-        opponentScorePoint.textContent = `${game.opponent.getScore()}`;
+        const xScorePoint = xScore.querySelector(".score__score");
+        xScorePoint.textContent = `${game.user.mark == "x" ? game.user.getScore() : game.opponent.getScore()}`;
+        const oScorePoint = oScore.querySelector(".score__score");
+        oScorePoint.textContent = `${game.opponent.mark == "o" ? game.opponent.getScore() : game.user.getScore()}`;
         const tiesScorePoint = tiesScore.querySelector(".score__score");
         tiesScorePoint.textContent = `${game.ties}`;
+        // If you go first and reset game, computer somehow go first bc the following code
+        // CPU make a move
+        if (game.playerTurn.mark == "x" && game.opponent.mark == "x" && game.playerGoFirst.mark == 'x') {
+            cpuMove(game);
+        }
+    }
+    function playerMove(game, button, x, y) {
+        button.innerHTML = `<img src="./assets/images/icon-${game.playerTurn.mark}.svg">`; //
+        game.move(x, y);
+        checkWinner(game);
+    }
+    function cpuMove(newGame) {
+        const boardChoices = document.querySelectorAll(".board__choice");
+        /**
+         * CPU make a move
+         * TODO: Make move smarter
+         */
+        let randomX;
+        let randomY;
+        do {
+            randomX = Math.round(Math.random() * 2);
+            randomY = Math.round(Math.random() * 2);
+        } while (!newGame.movable(randomX, randomY));
+        const target = boardChoices[`${3 * randomX + randomY}`];
+        playerMove(newGame, target, randomX, randomY);
     }
     function checkWinner(game) {
         if (game.foundWinner()) {
@@ -161,65 +259,10 @@ const playBoardHTML = `
             turnIcon.src = `./assets/images/icon-${game.playerTurn.mark}-gray.svg`;
         }
     }
-    function playerMove(game, button, x, y) {
-        button.innerHTML = `<img src="./assets/images/icon-${game.playerTurn.mark}.svg">`; //
-        game.move(x, y);
-        checkWinner(game);
+    function getX(button) {
+        return Math.floor(Number(button.id) / 3);
     }
-    const buttonUser = document.querySelector("#btnUser");
-    buttonUser.addEventListener("click", () => {
-        let newGame = buttonX.classList.contains("choice__btn--pick")
-            ? new TicTacToe("x", "o")
-            : new TicTacToe("o", "x");
-        createBoard(newGame);
-        // Player make a move
-        const boardChoices = document.querySelectorAll(".board__choice");
-        boardChoices.forEach((button) => {
-            button.addEventListener("click", () => {
-                if (newGame.movable(getX(button), getY(button))) {
-                    playerMove(newGame, button, getX(button), getY(button));
-                }
-            });
-        });
-        // Reset board in-game
-        const resetButton = document.querySelector(".reset");
-        resetButton.addEventListener("click", () => {
-            resetBoard(newGame);
-        });
-    });
-    const buttonCPU = document.querySelector("#btnCPU");
-    buttonCPU.addEventListener("click", () => {
-        let newGame = buttonX.classList.contains("choice__btn--pick")
-            ? new TicTacToe("x", "o")
-            : new TicTacToe("o", "x");
-        createBoard(newGame);
-        // TODO: CPU make a move if its goes first
-        // Player make a move
-        const boardChoices = document.querySelectorAll(".board__choice");
-        boardChoices.forEach((button) => {
-            button.addEventListener("click", () => {
-                if (newGame.movable(getX(button), getY(button))) {
-                    playerMove(newGame, button, getX(button), getY(button));
-                    if (!newGame.foundWinner()) {
-                        /**
-                         * CPU make a move
-                         * TODO: Make move smarter
-                         */
-                        let randomX;
-                        let randomY;
-                        do {
-                            randomX = Math.round(Math.random() * 2);
-                            randomY = Math.round(Math.random() * 2);
-                        } while (!newGame.movable(randomX, randomY));
-                        const target = boardChoices[`${3 * randomX + randomY}`];
-                        playerMove(newGame, target, randomX, randomY);
-                    }
-                }
-            });
-        });
-        const resetButton = document.querySelector(".reset");
-        resetButton.addEventListener("click", () => {
-            resetBoard(newGame);
-        });
-    });
+    function getY(button) {
+        return Math.floor(Number(button.id) % 3);
+    }
 })();
