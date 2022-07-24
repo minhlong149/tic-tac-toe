@@ -92,7 +92,7 @@ const playBoardHTML = `
         let newGame = buttonX.classList.contains("choice__btn--pick")
             ? new TicTacToe("x", "o")
             : new TicTacToe("o", "x");
-        createBoard(newGame);
+        createBoardPlayer(newGame);
         // Player make a move
         const boardChoices = document.querySelectorAll(".board__choice");
         boardChoices.forEach((button) => {
@@ -171,6 +171,19 @@ const playBoardHTML = `
             `${game.opponent.mark == "o" ? "CPU" : "You"} ` +
                 opponentMark.textContent;
     }
+    function createBoardPlayer(game) {
+        body.innerHTML = playBoardHTML;
+        const userScore = document.querySelector(".score--user");
+        const opponentScore = document.querySelector(".score--opponent");
+        const userMark = userScore.querySelector(".score__player");
+        userMark.textContent =
+            `${game.user.mark == "x" ? "You" : "Player"} ` +
+                userMark.textContent;
+        const opponentMark = opponentScore.querySelector(".score__player");
+        opponentMark.textContent =
+            `${game.opponent.mark == "o" ? "Player" : "You"} ` +
+                opponentMark.textContent;
+    }
     function resetBoard(game) {
         game.resetGameBoard();
         // Set turn icon to x
@@ -188,12 +201,16 @@ const playBoardHTML = `
         const xScorePoint = xScore.querySelector(".score__score");
         xScorePoint.textContent = `${game.user.mark == "x" ? game.user.getScore() : game.opponent.getScore()}`;
         const oScorePoint = oScore.querySelector(".score__score");
-        oScorePoint.textContent = `${game.opponent.mark == "o" ? game.opponent.getScore() : game.user.getScore()}`;
+        oScorePoint.textContent = `${game.opponent.mark == "o"
+            ? game.opponent.getScore()
+            : game.user.getScore()}`;
         const tiesScorePoint = tiesScore.querySelector(".score__score");
         tiesScorePoint.textContent = `${game.ties}`;
         // If you go first and reset game, computer somehow go first bc the following code
         // CPU make a move
-        if (game.playerTurn.mark == "x" && game.opponent.mark == "x" && game.playerGoFirst.mark == 'x') {
+        if (game.playerTurn.mark == "x" &&
+            game.opponent.mark == "x" &&
+            game.playerGoFirst.mark == "x") {
             cpuMove(game);
         }
     }

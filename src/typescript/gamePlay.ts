@@ -112,7 +112,6 @@ class TicTacToe {
         // PLayer go second last game goes first
         this.playerTurn =
           this.playerGoFirst == this.user ? this.opponent : this.user;
-        this.ties++;
       } else {
         // Game reset, who goes first keep go first
         this.playerTurn = this.playerGoFirst;
@@ -129,6 +128,7 @@ class TicTacToe {
       for (let j = 0; j < 3; ++j) {
         if (this.#GameBoard[i][j] == "") return false;
       }
+    this.ties++;
     return true;
   }
 }
