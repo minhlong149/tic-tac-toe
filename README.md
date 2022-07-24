@@ -1,6 +1,6 @@
 # Tic Tac Toe
 
-This is my solution to the [Tic Tac Toe Project on The Odin Project](https://www.theodinproject.com/paths/foundations/courses/foundations/lessons/tic-tac-toe), using [Frontend Mentor's Tic Tac Toe game design](https://www.frontendmentor.io/challenges/tic-tac-toe-game-Re7ZF_E2v).
+This is my solution to the [Tic Tac Toe Project on The Odin Project](https://www.theodinproject.com/lessons/node-path-javascript-tic-tac-toe), using [Frontend Mentor's Tic Tac Toe game design](https://www.frontendmentor.io/challenges/tic-tac-toe-game-Re7ZF_E2v).
 
 ## Table of contents
 
