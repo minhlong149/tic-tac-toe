@@ -1,32 +1,35 @@
 # Tic Tac Toe
 
-This is my solution to the [Tic Tac Toe Project on The Odin Project](https://www.theodinproject.com/paths/foundations/courses/foundations/lessons/tic-tac-toe), using [Frontend Mentor's Tic Tac Toe game design](https://www.frontendmentor.io/challenges/calculator-app-9lteq5N29).
+This is my solution to the [Tic Tac Toe Project on The Odin Project](https://www.theodinproject.com/paths/foundations/courses/foundations/lessons/tic-tac-toe), using [Frontend Mentor's Tic Tac Toe game design](https://www.frontendmentor.io/challenges/tic-tac-toe-game-Re7ZF_E2v).
 
 ## Table of contents
 
-- [Overview](#overview)
-  - [The goals](#the-goals)
-  - [Screenshot](#screenshot)
-  - [Links](#links)
-- [My process](#my-process)
-  - [Built with](#built-with)
-  - [Continued development](#continued-development)
-  - [Useful resources](#useful-resources)
-- [Author](#author)
+- [Tic Tac Toe](#tic-tac-toe)
+  - [Table of contents](#table-of-contents)
+  - [Overview](#overview)
+    - [The goals](#the-goals)
+    - [Screenshot](#screenshot)
+    - [Links](#links)
+  - [My process](#my-process)
+    - [Built with](#built-with)
+    - [Continued development](#continued-development)
+    - [Useful resources](#useful-resources)
+  - [Author](#author)
 
 ## Overview
 
 ### The goals
 
 - Play the game either solo vs the computer, or multiplayer against another person
-- A button to restart the game 
+- A button to restart the game
 - A display element that congratulates the winning player!
+- Add hover states to interactive elements
+- Smart computer's move
 
 ### Screenshot
 
-![](./assets/screenshots/screenshot-1.png)
-![](./assets/screenshots/screenshot-2.png)
-![](./assets/screenshots/screenshot-3.png)
+![screenshots](./assets/screenshots/screenshot-1.png)
+![screenshots](./assets/screenshots/screenshot-2.png)
 
 ### Links
 
@@ -44,9 +47,8 @@ This is my solution to the [Tic Tac Toe Project on The Odin Project](https://www
 ### Continued development
 
 - Optimal layout for mobile
-- Add hover states to interactive elements
 - Game state is saved in the browser
-- Making computer's move smarter, or even [unbeatable](https://en.wikipedia.org/wiki/Minimax)
+- Making computer's move [unbeatable](https://en.wikipedia.org/wiki/Minimax)
 - Allow players to put in their names and join the chatroom!
 
 ### Useful resources
