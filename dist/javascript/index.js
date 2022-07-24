@@ -126,7 +126,7 @@ const playBoardHTML = `
             : new TicTacToe("o", "x");
         createBoard(newGame);
         // CPU make a move if its goes first
-        if (newGame.playerTurn.mark == "x" && newGame.opponent.mark == "x") {
+        if (newGame.playerTurn.mark == newGame.opponent.mark) {
             cpuMove(newGame);
         }
         // Player make a move
@@ -136,7 +136,7 @@ const playBoardHTML = `
                 if (newGame.movable(getX(button), getY(button))) {
                     playerMove(newGame, button, getX(button), getY(button));
                     // CPU move after
-                    if (!newGame.foundWinner()) {
+                    if (newGame.playerTurn.mark == newGame.opponent.mark) {
                         cpuMove(newGame);
                     }
                 }
@@ -206,9 +206,7 @@ const playBoardHTML = `
         tiesScorePoint.textContent = `${game.ties}`;
         // If you go first and reset game, computer somehow go first bc the following code
         // CPU make a move
-        if (game.playerTurn.mark == "x" &&
-            game.opponent.mark == "x" &&
-            game.playerGoFirst.mark == "x") {
+        if (game.playerTurn.mark == game.opponent.mark) {
             cpuMove(game);
         }
     }
@@ -219,14 +217,9 @@ const playBoardHTML = `
     }
     function cpuMove(newGame) {
         const boardChoices = document.querySelectorAll(".board__choice");
-        /**
-         * CPU make a move
-         * TODO: Make move smarter
-         */
-        const solu = newGame.cpuMove();
-        let [randomX, randomY] = [solu[0], solu[1]];
-        const target = boardChoices[`${3 * randomX + randomY}`];
-        playerMove(newGame, target, randomX, randomY);
+        const [moveX, moveY] = [...newGame.cpuMove()];
+        const target = boardChoices[`${3 * moveX + moveY}`];
+        playerMove(newGame, target, moveX, moveY);
     }
     function checkWinner(game) {
         if (game.foundWinner()) {

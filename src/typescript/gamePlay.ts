@@ -19,8 +19,11 @@ class Player {
 class TicTacToe {
   user: Player;
   opponent: Player;
+
   playerTurn: Player;
   playerGoFirst: Player;
+
+  winner: Player; // player can't play if the game is finished
   ties: number;
 
   #GameBoard: [
@@ -29,16 +32,16 @@ class TicTacToe {
     [string, string, string]
   ];
 
-  winner: Player; // player can't play if the game is finished
-
   constructor(userMark: string, opponentMark: string) {
     this.user = new Player(userMark);
     this.opponent = new Player(opponentMark);
 
-    this.playerTurn = this.user.mark == "x" ? this.user : this.opponent;
     this.playerGoFirst = this.user.mark == "x" ? this.user : this.opponent;
+    this.playerTurn = this.user.mark == "x" ? this.user : this.opponent;
 
+    this.winner = undefined;
     this.ties = 0;
+
     this.#GameBoard = [
       ["", "", ""],
       ["", "", ""],
@@ -85,42 +88,42 @@ class TicTacToe {
   }
 
   move(x: number, y: number, player: Player = this.playerTurn) {
-    if (this.movable(x, y)) {
-      this.#GameBoard[x][y] = player.mark;
-      if (this.foundWinner(player)) {
-        this.winner = player;
-        this.winner.won();
-        this.playerGoFirst =
-          this.winner == this.user ? this.opponent : this.user;
-      } else {
-        this.playerTurn =
-          this.playerTurn == this.user ? this.opponent : this.user;
-      }
+    this.#GameBoard[x][y] = player.mark;
+    if (this.foundWinner(player)) {
+      this.winner = player;
+      this.winner.won();
+    } else if (this.isTies()) {
+      this.ties++;
+    } else {
+      this.playerTurn =
+        this.playerTurn == this.user ? this.opponent : this.user;
     }
   }
 
   resetGameBoard() {
+    if (this.isTies()) {
+      console.log("Tie " + this.playerTurn.mark);
+      this.playerTurn =
+        this.playerGoFirst == this.user ? this.opponent : this.user;
+    } else if (!this.winner) {
+      console.log("Reset");
+
+      // Game reset, no winner, who goes first keep go first
+      this.playerTurn = this.playerGoFirst;
+    } else {
+      console.log("Done");
+
+      this.playerTurn = this.winner == this.user ? this.opponent : this.user;
+    }
+
+    this.playerGoFirst = this.playerTurn;
+    this.winner = undefined;
+
     this.#GameBoard = [
       ["", "", ""],
       ["", "", ""],
       ["", "", ""],
     ];
-
-    if (this.isTies() || !this.winner) {
-      // Game not complete
-      if (this.isTies()) {
-        // PLayer go second last game goes first
-        this.playerTurn =
-          this.playerGoFirst == this.user ? this.opponent : this.user;
-      } else {
-        // Game reset, who goes first keep go first
-        this.playerTurn = this.playerGoFirst;
-      }
-    } else {
-      // game complete
-      this.playerTurn = this.winner == this.user ? this.opponent : this.user;
-    }
-    this.winner = undefined;
   }
 
   isTies() {
@@ -128,104 +131,91 @@ class TicTacToe {
       for (let j = 0; j < 3; ++j) {
         if (this.#GameBoard[i][j] == "") return false;
       }
-    this.ties++;
     return true;
   }
 
-  cpuMove() {
-    let x, y: number;
-    do {
-      x = Math.round(Math.random() * 2);
-      y = Math.round(Math.random() * 2);
-    } while (!this.movable(x, y));
-
-    let score = [
-      [1, 0, 1],
-      [0, 2, 0],
-      [1, 0, 1],
-    ];
-
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        if (this.movable(i, j)) {
+  cpuMove(): [number, number] {
+    for (let row = 0; row < 3; row++) {
+      for (let col = 0; col < 3; col++) {
+        if (this.movable(row, col)) {
           let checkBoard = this.#GameBoard.map((arr) => arr.slice());
-          checkBoard[i][j] = this.opponent.mark;
 
           // Check if instant win
-          // Check row
-          if (
-            checkBoard[i][0] === this.opponent.mark &&
-            checkBoard[i][1] === this.opponent.mark &&
-            checkBoard[i][2] === this.opponent.mark
-          ) {
-            console.log("row win");
+          checkBoard[row][col] = this.opponent.mark;
 
-            return [i, j];
-          }
-          // Check column
           if (
-            checkBoard[0][j] === this.opponent.mark &&
-            checkBoard[1][j] === this.opponent.mark &&
-            checkBoard[2][j] === this.opponent.mark
+            checkBoard[row][0] === this.opponent.mark &&
+            checkBoard[row][1] === this.opponent.mark &&
+            checkBoard[row][2] === this.opponent.mark
           ) {
-            console.log("col win");
-
-            return [i, j];
+            return [row, col];
           }
-          // Check cross
+          if (
+            checkBoard[0][col] === this.opponent.mark &&
+            checkBoard[1][col] === this.opponent.mark &&
+            checkBoard[2][col] === this.opponent.mark
+          ) {
+            return [row, col];
+          }
           if (
             checkBoard[0][0] === this.opponent.mark &&
             checkBoard[1][1] === this.opponent.mark &&
             checkBoard[2][2] === this.opponent.mark
           ) {
-            console.log("cross win");
-
-            return [i, j];
+            return [row, col];
           }
           if (
             checkBoard[0][2] === this.opponent.mark &&
             checkBoard[1][1] === this.opponent.mark &&
             checkBoard[2][0] === this.opponent.mark
           ) {
-            console.log("cross rev win");
-            return [i, j];
+            return [row, col];
           }
 
           // Check user could win
-          checkBoard[i][j] = this.user.mark;
+          checkBoard[row][col] = this.user.mark;
 
           if (
-            checkBoard[i][0] === this.user.mark &&
-            checkBoard[i][1] === this.user.mark &&
-            checkBoard[i][2] === this.user.mark
+            checkBoard[row][0] === this.user.mark &&
+            checkBoard[row][1] === this.user.mark &&
+            checkBoard[row][2] === this.user.mark
           ) {
-            return [i, j];
+            return [row, col];
           }
           if (
-            checkBoard[0][j] === this.user.mark &&
-            checkBoard[1][j] === this.user.mark &&
-            checkBoard[2][j] === this.user.mark
+            checkBoard[0][col] === this.user.mark &&
+            checkBoard[1][col] === this.user.mark &&
+            checkBoard[2][col] === this.user.mark
           ) {
-            return [i, j];
+            return [row, col];
           }
           if (
             checkBoard[0][0] === this.user.mark &&
             checkBoard[1][1] === this.user.mark &&
             checkBoard[2][2] === this.user.mark
           ) {
-            return [i, j];
+            return [row, col];
           }
           if (
             checkBoard[0][2] === this.user.mark &&
             checkBoard[1][1] === this.user.mark &&
             checkBoard[2][0] === this.user.mark
           ) {
-            return [i, j];
+            return [row, col];
           }
         }
       }
     }
-    return [x, y];
+    /**
+     * CPU make a random move
+     */
+
+    let randomRow: number, randomCol: number;
+    do {
+      randomRow = Math.round(Math.random() * 2);
+      randomCol = Math.round(Math.random() * 2);
+    } while (!this.movable(randomRow, randomCol));
+    return [randomRow, randomCol];
   }
 }
 
